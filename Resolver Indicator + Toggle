@@ -1,0 +1,43 @@
+local John_ResolverTOGGLE = gui.Checkbox(gui.Reference("Ragebot", "Accuracy", "Position Adjustment"), "R.toggle", "Resolver Indicator Toggle", false)
+
+local John_ResolverKEY = gui.Keybox(gui.Reference("Ragebot", "Accuracy", "Position Adjustment"), "misc.resolver", "Resolver Key", 0)
+
+local FONT = draw.CreateFont("Verdana", 30, 2000)
+
+local resolver = 1
+
+
+John_ResolverTOGGLE:SetDescription("Enables Keybind for Resolver")
+John_ResolverKEY:SetDescription("Keybind to toggle Resolver")
+
+local pressed = false;
+callbacks.Register("Draw", function()
+    if John_ResolverKEY:GetValue() ~= 0 then
+        if input.IsButtonPressed(John_ResolverKEY:GetValue()) then
+            resolver = resolver * -1
+        end
+    end
+    if John_ResolverTOGGLE:GetValue() and entities.GetLocalPlayer() then
+            local screenW, screenH = draw.GetScreenSize()
+            if gui.GetValue("rbot.accuracy.posadj.resolver", true) then
+                draw.Color(124, 176, 34)
+            else
+                draw.Color(255, 25, 25)
+            end
+            draw.SetFont(FONT)
+            draw.TextShadow(10, screenH - 400, "Resolver" )
+    end
+
+    if John_ResolverKEY:GetValue() ~= 0 then
+        if input.IsButtonPressed(John_ResolverKEY:GetValue()) then
+            pressed=true;
+        elseif (pressed and input.IsButtonReleased(John_ResolverKEY:GetValue())) then
+            pressed=false;
+            if gui.GetValue("rbot.accuracy.posadj.resolver") then
+                gui.SetValue("rbot.accuracy.posadj.resolver", false)
+            else
+                gui.SetValue("rbot.accuracy.posadj.resolver", true)
+            end
+        end
+    end
+end)
